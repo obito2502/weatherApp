@@ -9,6 +9,8 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import Toast from "react-native-root-toast";
 
+import getWeatherForDay from "../helpers/GetWeatherForDay";
+import getFutureWeather from "../helpers/GetFutureWeather";
 
 const width = Dimensions.get('screen').width
 const height = Dimensions.get('screen').height
@@ -16,26 +18,11 @@ const height = Dimensions.get('screen').height
 const CityComponent = ({name, navigation, props}) => {
 
     const handleClick = () => {
-        fetch(`https://api.openweathermap.org/data/2.5/weather?q=${name}&units=metric&appid=d7b00e3b1c8cc224e73f52f2cf64a792`, {
-            method: 'GET', 
-            headers: {}
-        }).then(response => response.json()).
-        then(responseJson => {
-
-            AsyncStorage.setItem('city', name)
-            
-            props.navigation.navigate('Tabs', { 
-                screen: 'Day',
-                params: {data: responseJson, id: true}
-            })
-
-        }).
-        catch((error) => {
-            Toast.show('Проверьте введенные данные', {
-                duration: Toast.durations.SHORT, 
-                position: Toast.positions.CENTER
-            })
+        
+        AsyncStorage.setItem('city', name).then(() => {
+            navigation.navigate('Tabs', {screen: 'Day', params: {id: 'today'}})
         })
+        
     }
 
     return (

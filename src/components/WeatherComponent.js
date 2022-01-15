@@ -16,7 +16,7 @@ const height = Dimensions.get('screen').height
 const WeatherComponent = ({day, navigation, ...props}) => {
 
     const handleClick = () => {
-        navigation.navigate('FutureDays', {data: day})
+        navigation.navigate('FutureDays', {data: day, id: 'future'})
     }   
 
     const renderTime = (timeUTC) => {

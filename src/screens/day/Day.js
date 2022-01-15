@@ -14,6 +14,7 @@ import CityComponent from "../../components/CityComponent";
 import Moment from 'moment';
 
 import moment from "moment";
+import getWeatherForDay from "../../helpers/GetWeatherForDay";
 
 const width = Dimensions.get('screen').width
 const height = Dimensions.get('screen').height
@@ -23,15 +24,33 @@ export default class DayScreen extends React.Component {
         super(props)
 
         this.state = {
-            data: props.route.params.data,
-            name: '',
+            data: null,
+            name: ''
         }
+
     }
 
-    componentDidMount() {
-        AsyncStorage.getItem('city').then((city) => {
-            this.setState({name: city})
-        })
+    async getData(name) {
+
+        var result = await getWeatherForDay('name')
+
+        this.setState({data: result})
+
+    }
+
+   componentDidMount() {
+
+        AsyncStorage.getItem('city').then((result) => {
+            this.setState({name: result})
+
+            if(this.props.route.params.id == 'today') {
+                this.getData(result)
+            } else {
+                this.setState({data: this.props.route.params.data})
+            }
+
+        }) 
+        
     }
 
     renderDate() {
@@ -58,7 +77,7 @@ export default class DayScreen extends React.Component {
     }
 
     handleBackButton() {
-        if(this.state.data.id) {
+        if(this.state.data.id == 'today') {
             this.props.navigation.reset({
                 index: 0, 
                 routes: [{name: 'Main'}]
@@ -69,11 +88,8 @@ export default class DayScreen extends React.Component {
     }
 
     renderName(name) {
-        if(name == undefined) {
-            return name
-        } else {
-            return this.state.name
-        }
+        
+        return this.state.name
     }
 
     renderSunTime() {
@@ -117,212 +133,216 @@ export default class DayScreen extends React.Component {
     }
 
     render() {
-        return (
-            <SafeAreaView style={styles.container}>
+        if(this.state.data == null) {
+            return null
+        } else {
+            return (
+                <SafeAreaView style={styles.container}>
 
-                <View style={styles.header}>
+                    <View style={styles.header}>
 
-                    <TouchableOpacity style={styles.backButton} onPress={() => this.handleBackButton()}>
-
-                        <Image 
-                            style={styles.backIcon}
-                            source={require('../../../assets/images/backIcon.png')}
-                        />
-
-                    </TouchableOpacity>
-
-                    <View>
-
-                        <Text style={styles.headerText}>
-                            {this.renderName(this.state.data.name)}
-                        </Text>
-
-                        <Text style={styles.dateText}>
-
-                            {this.renderDate()}
-
-                        </Text>
-
-                    </View>
-
-                </View>
-
-                <View style={styles.mainData}>
-
-                    <View style={styles.weatherIconView}>
-
-                        <Image 
-                            style={styles.weatherIcon}
-                            source={{uri: `http://openweathermap.org/img/w/${this.state.data.weather[0].icon}.png`}}
-                        />
-
-                        <Text style={styles.weatherText}>
-                            {this.state.data.weather[0].description}
-                        </Text>
-
-                    </View>
-
-                    <View style={styles.weatherTextView}>
-
-                        <View style={styles.weatherTextCategory}>
+                        <TouchableOpacity style={styles.backButton} onPress={() => this.handleBackButton()}>
 
                             <Image 
-                                style={styles.weatherTextCategoryIcon}
-                                source={require('../../../assets/images/tempIcon.png')}
+                                style={styles.backIcon}
+                                source={require('../../../assets/images/backIcon.png')}
                             />
 
-                            <Text style={styles.weatherTextCategoryText}>
-                                {this.state.data.main.temp}°C
+                        </TouchableOpacity>
+
+                        <View>
+
+                            <Text style={styles.headerText}>
+                                {this.renderName(this.state.data.name)}
+                            </Text>
+
+                            <Text style={styles.dateText}>
+
+                                {this.renderDate()}
+
                             </Text>
 
                         </View>
 
-                        <View style={styles.weatherTextCategory}>
+                    </View>
+
+                    <View style={styles.mainData}>
+
+                        <View style={styles.weatherIconView}>
 
                             <Image 
-                                style={styles.weatherTextCategoryIcon}
-                                source={require('../../../assets/images/humidity.png')}
+                                style={styles.weatherIcon}
+                                source={{uri: `http://openweathermap.org/img/w/${this.state.data.weather[0].icon}.png`}}
                             />
 
-                            <Text style={styles.weatherTextCategoryText}>
-                                {this.state.data.main.humidity}%
+                            <Text style={styles.weatherText}>
+                                {this.state.data.weather[0].description}
                             </Text>
 
                         </View>
 
-                        <View style={styles.weatherTextCategory}>
+                        <View style={styles.weatherTextView}>
+
+                            <View style={styles.weatherTextCategory}>
+
+                                <Image 
+                                    style={styles.weatherTextCategoryIcon}
+                                    source={require('../../../assets/images/tempIcon.png')}
+                                />
+
+                                <Text style={styles.weatherTextCategoryText}>
+                                    {this.state.data.main.temp}°C
+                                </Text>
+
+                            </View>
+
+                            <View style={styles.weatherTextCategory}>
+
+                                <Image 
+                                    style={styles.weatherTextCategoryIcon}
+                                    source={require('../../../assets/images/humidity.png')}
+                                />
+
+                                <Text style={styles.weatherTextCategoryText}>
+                                    {this.state.data.main.humidity}%
+                                </Text>
+
+                            </View>
+
+                            <View style={styles.weatherTextCategory}>
+
+                                <Image 
+                                    style={styles.weatherTextCategoryIcon}
+                                    source={require('../../../assets/images/wind.png')}
+                                />
+
+                                <Text style={styles.weatherTextCategoryText}>
+                                    {this.state.data.wind.speed} meter/sec
+                                </Text>
+
+                            </View>
+            
+                        </View>
+                    
+                    </View> 
+
+                    <View style={styles.externalData}>
+
+                        <View style={styles.firstData}>
+
+                            <View style={styles.firstDataCategory}>
+
+                                <Text style={styles.firstDataText}>
+                                    Feels like
+                                </Text>
+
+                                <Text style={styles.firstDataText}>
+                                    {this.state.data.main.feels_like}°C
+                                </Text>
+
+                            </View>
+
+                            <View style={styles.firstDataCategory}>
+
+                                <Text style={styles.firstDataText}>
+                                    Sea level
+                                </Text>
+
+                                <Text style={styles.firstDataText}>
+                                    {this.state.data.main.sea_level} hPa
+                                </Text>
+
+                            </View>
+
+                            <View style={styles.firstDataCategory}>
+
+                                <Text style={styles.firstDataText}>
+                                    Max temp.
+                                </Text>
+
+                                <Text style={styles.firstDataText}>
+                                    {this.state.data.main.temp_max}°C
+                                </Text>
+
+                            </View>
+
+                        </View>
+
+                        <View style={styles.firstData}>
+
+                            <View style={styles.firstDataCategory}>
+
+                                <Text style={styles.firstDataText}>
+                                    Pressure
+                                </Text>
+
+                                <Text style={styles.firstDataText}>
+                                    {this.state.data.main.pressure} hPa
+                                </Text>
+
+                            </View>
+
+                            <View style={styles.firstDataCategory}>
+
+                                <Text style={styles.firstDataText}>
+                                    Ground level
+                                </Text>
+
+                                <Text style={styles.firstDataText}>
+                                    {this.state.data.main.grnd_level} hPa
+                                </Text>
+
+                            </View>
+
+                            <View style={styles.firstDataCategory}>
+
+                                <Text style={styles.firstDataText}>
+                                    Min temp.
+                                </Text>
+
+                                <Text style={styles.firstDataText}>
+                                    {this.state.data.main.temp_min}°C
+                                </Text>
+
+                            </View>
+
+                        </View>
+
+                    </View>
+
+                    {this.renderSunTime()}
+
+                    <View style={styles.cloudView}>
+
+                        <View style={{
+
+                        }}>
 
                             <Image 
-                                style={styles.weatherTextCategoryIcon}
-                                source={require('../../../assets/images/wind.png')}
+                                style={styles.cloudIcon}
+                                source={require('../../../assets/images/cloud.png')}
                             />
 
-                            <Text style={styles.weatherTextCategoryText}>
-                                {this.state.data.wind.speed} meter/sec
+                            <Text style={{
+                                color: 'black'
+                            }}>
+                                (Cloudiness)
                             </Text>
 
                         </View>
-           
-                    </View>
-                
-                </View> 
-
-                <View style={styles.externalData}>
-
-                    <View style={styles.firstData}>
-
-                        <View style={styles.firstDataCategory}>
-
-                            <Text style={styles.firstDataText}>
-                                Feels like
-                            </Text>
-
-                            <Text style={styles.firstDataText}>
-                                {this.state.data.main.feels_like}°C
-                            </Text>
-
-                        </View>
-
-                        <View style={styles.firstDataCategory}>
-
-                            <Text style={styles.firstDataText}>
-                                Sea level
-                            </Text>
-
-                            <Text style={styles.firstDataText}>
-                                {this.state.data.main.sea_level} hPa
-                            </Text>
-
-                        </View>
-
-                        <View style={styles.firstDataCategory}>
-
-                            <Text style={styles.firstDataText}>
-                                Max temp.
-                            </Text>
-
-                            <Text style={styles.firstDataText}>
-                                {this.state.data.main.temp_max}°C
-                            </Text>
-
-                        </View>
-
-                    </View>
-
-                    <View style={styles.firstData}>
-
-                        <View style={styles.firstDataCategory}>
-
-                            <Text style={styles.firstDataText}>
-                                Pressure
-                            </Text>
-
-                            <Text style={styles.firstDataText}>
-                                {this.state.data.main.pressure} hPa
-                            </Text>
-
-                        </View>
-
-                        <View style={styles.firstDataCategory}>
-
-                            <Text style={styles.firstDataText}>
-                                Ground level
-                            </Text>
-
-                            <Text style={styles.firstDataText}>
-                                {this.state.data.main.grnd_level} hPa
-                            </Text>
-
-                        </View>
-
-                        <View style={styles.firstDataCategory}>
-
-                            <Text style={styles.firstDataText}>
-                                Min temp.
-                            </Text>
-
-                            <Text style={styles.firstDataText}>
-                                {this.state.data.main.temp_min}°C
-                            </Text>
-
-                        </View>
-
-                    </View>
-
-                </View>
-
-                {this.renderSunTime()}
-
-                <View style={styles.cloudView}>
-
-                    <View style={{
-
-                    }}>
-
-                        <Image 
-                            style={styles.cloudIcon}
-                            source={require('../../../assets/images/cloud.png')}
-                        />
 
                         <Text style={{
-                            color: 'black'
+                            color: 'black',
+                            fontSize: 30,
                         }}>
-                            (Cloudiness)
+                            {this.state.data.clouds.all}%
                         </Text>
 
                     </View>
 
-                    <Text style={{
-                        color: 'black',
-                        fontSize: 30,
-                    }}>
-                        {this.state.data.clouds.all}%
-                    </Text>
-
-                </View>
-
-            </SafeAreaView>
-        )
+                </SafeAreaView>
+            )
+        }
     }
 
 }

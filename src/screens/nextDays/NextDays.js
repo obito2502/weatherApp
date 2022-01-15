@@ -14,8 +14,8 @@ import CityComponent from "../../components/CityComponent";
 import Moment from 'moment';
 import Toast from "react-native-root-toast";
 
-import weatherList from "./weatherList";
 import WeatherComponent from "../../components/WeatherComponent";
+import getFutureWeather from "../../helpers/GetFutureWeather";
 
 const width = Dimensions.get('screen').width
 const height = Dimensions.get('screen').height
@@ -25,74 +25,68 @@ export default class NextDaysScreen extends React.Component {
         super(props)
 
         this.state = {
-            data: {}
+            data: null
         }
 
+    }
 
+    async getData(name) {
+        var result = await getFutureWeather(name)
+
+        this.setState({data: result})
     }
 
     componentDidMount() {
-
-        AsyncStorage.getItem('city').then((city) => {
-
-            fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=metric&appid=d7b00e3b1c8cc224e73f52f2cf64a792`, {
-                method: 'GET', 
-                headers: {}
-            }).then((response) => response.json()).
-            then((responseJson) => {
-                this.setState({data: responseJson.list})
-            }).
-            catch((error) => {
-                Toast.show('Проверьте введенные данные', {
-                    duration: Toast.durations.SHORT, 
-                    position: Toast.positions.CENTER
-                })
-            })
-
+        AsyncStorage.getItem('city').then((result) => {
+            this.getData(result)
         })
-
     }
 
     render() {
-        return (
-            <SafeAreaView style={styles.container}>
-
-                <View style={styles.header}>
-
-                    <TouchableOpacity style={styles.backButton} onPress={() => this.props.navigation.reset({
-                        index: 0, 
-                        routes: [{name: 'Main'}]
-                    })}>
-
-                        <Image 
-                            style={styles.backIcon}
-                            source={require('../../../assets/images/backIcon.png')}
-                        />
-
-                    </TouchableOpacity>
-
-                    <View>
-
-                        <Text style={styles.headerText}>
-                            Weather for future
-                        </Text>
-
+        if(this.state.data == null) {
+            return null
+        } else {
+            return (
+                <SafeAreaView style={styles.container}>
+    
+                    <View style={styles.header}>
+    
+                        <TouchableOpacity style={styles.backButton} onPress={() => this.props.navigation.reset({
+                            index: 0, 
+                            routes: [{name: 'Main'}]
+                        })}>
+    
+                            <Image 
+                                style={styles.backIcon}
+                                source={require('../../../assets/images/backIcon.png')}
+                            />
+    
+                        </TouchableOpacity>
+    
+                        <View>
+    
+                            <Text style={styles.headerText}>
+                                Weather for future
+                            </Text>
+    
+                        </View>
+    
                     </View>
-
-                </View>
-
-                <View style={styles.body}>
-
-                    <FlatList 
-                        data={this.state.data}
-                        renderItem={({item, index}) => <WeatherComponent day={item} navigation={this.props.navigation}/>}
-                        style={styles.flatlist}
-                    />
-
-                </View>
-
-            </SafeAreaView>
-        )
+    
+                    <View style={styles.body}>
+    
+                        <FlatList 
+                            data={this.state.data}
+                            renderItem={({item, index}) => <WeatherComponent day={item} navigation={this.props.navigation}/>}
+                            style={styles.flatlist}
+                        />
+    
+                    </View>
+    
+                </SafeAreaView>
+            )
+        }
+        
     }
 
 }
