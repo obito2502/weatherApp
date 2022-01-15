@@ -15,6 +15,7 @@ import Moment from 'moment';
 
 import moment from "moment";
 import getWeatherForDay from "../../helpers/GetWeatherForDay";
+import { ScrollView } from "react-native-gesture-handler";
 
 const width = Dimensions.get('screen').width
 const height = Dimensions.get('screen').height
@@ -138,6 +139,8 @@ export default class DayScreen extends React.Component {
         } else {
             return (
                 <SafeAreaView style={styles.container}>
+
+                    <ScrollView style={{flex: 1}}>
 
                     <View style={styles.header}>
 
@@ -339,6 +342,8 @@ export default class DayScreen extends React.Component {
                         </Text>
 
                     </View>
+
+                    </ScrollView>
 
                 </SafeAreaView>
             )
