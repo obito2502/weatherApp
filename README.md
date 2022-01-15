@@ -25,9 +25,9 @@ Welcome the weather app project. The project helps to know weather of different 
 5) In your terminal, from root of the project run command `chmod 755 gradlew`
 
 
-#Running the project
+# Running the project
 
-##Android
+## Android
 
 1) Start android emulator
 
@@ -40,7 +40,7 @@ Welcome the weather app project. The project helps to know weather of different 
 5) In the second terminal run project by command `npx react-native run-android`
 
 
-##iOS
+## iOS
 
 1) Run two terminals
 
