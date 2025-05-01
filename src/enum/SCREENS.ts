@@ -1,0 +1,6 @@
+enum SCREENS {
+  CITY_SEARCH = 'CITY_SEARCH',
+  CITY_WEATHER = 'CITY_WEATHER',
+}
+
+export default SCREENS;

@@ -1,0 +1,5 @@
+enum STACKS {
+  CITY_WEATHER_STACK = 'CITY_WEATHER_STACK',
+}
+
+export default STACKS;
