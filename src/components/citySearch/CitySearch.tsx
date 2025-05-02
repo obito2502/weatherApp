@@ -37,8 +37,8 @@ const styles = StyleSheet.create({
   input: {
     color: Colors.text,
     fontFamily: Fonts.roboto.regular,
-
     fontSize: resizeFont(16),
+    width: '80%',
   },
   inputView: {
     alignItems: 'center',

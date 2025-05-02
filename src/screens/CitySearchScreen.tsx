@@ -8,8 +8,9 @@ import GradientButton from '../components/GradientButton';
 import CitySearch from '../components/citySearch/CitySearch';
 import CitiesListComponent from '../components/citySearch/CitiesListComponent';
 import { CitySearchScreenProps } from '../types/NavigationType';
-import useRootStore from '../../store/useRootStore';
 import SCREENS from '../enum/SCREENS';
+import useRootStore from '../store/useRootStore';
+import { resizeHeight } from '../utils/resizeHelper';
 
 const CitySearchScreen = ({ navigation }: CitySearchScreenProps) => {
   const { citiesStore } = useRootStore();
@@ -34,6 +35,7 @@ const styles = StyleSheet.create({
   body: {
     alignSelf: 'center',
     flex: 1,
+    gap: resizeHeight(30),
     width: screenWidth * 0.9,
   },
   container: {

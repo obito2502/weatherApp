@@ -1,6 +1,6 @@
 import { makeAutoObservable } from 'mobx';
-import { CityDataType } from '../../src/types/MainTypes';
-import CitiesList from '../../src/data/CitiesList';
+import { CityDataType } from '../../types/MainTypes';
+import CitiesList from '../../data/CitiesList';
 
 class CitiesStore {
   public citiesList: CityDataType[] = [...CitiesList];

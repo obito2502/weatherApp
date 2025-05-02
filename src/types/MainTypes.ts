@@ -20,3 +20,8 @@ export interface WeatherDataType {
   dt: number;
   timezone: number;
 }
+
+export interface CachedWeatherData {
+  date: Date;
+  weatherData: WeatherDataType;
+}

@@ -11,11 +11,11 @@ import Text from '../components/Text';
 import { screenWidth } from '../utils/getScreenSize';
 import { resizeHeight, resizeWidth } from '../utils/resizeHelper';
 import resizeFont from '../utils/resizeFont';
-import useRootStore from '../../store/useRootStore';
 import Header from '../components/cityWeather/Header';
 import Loader from '../components/Loader';
 import { WeatherDataType } from '../types/MainTypes';
 import getImageUrl from '../utils/getImageUrl';
+import useRootStore from '../store/useRootStore';
 
 const CityWeatherScreen = ({ route, navigation }: CityWeatherScreenProps) => {
   const { city } = route.params;
@@ -25,6 +25,10 @@ const CityWeatherScreen = ({ route, navigation }: CityWeatherScreenProps) => {
 
   useEffect(() => {
     weatherStore.getWeather(city.lat, city.lng).then((res) => setWeatherData(res));
+
+    return () => {
+      weatherStore.setError('');
+    };
   }, [city.lat, city.lng, weatherStore]);
 
   if (weatherStore.loader) {
@@ -36,8 +40,15 @@ const CityWeatherScreen = ({ route, navigation }: CityWeatherScreenProps) => {
     );
   }
 
-  if (!weatherData) {
-    return null;
+  if (weatherStore.errorMessage || !weatherData) {
+    return (
+      <SafeAreaView style={styles.container}>
+        <Header cityName={city.city} goBack={() => navigation.goBack()} />
+        <Text color={Colors.red} size={26} style={styles.errorText}>
+          {weatherStore.errorMessage}
+        </Text>
+      </SafeAreaView>
+    );
   }
 
   return (
@@ -96,6 +107,9 @@ const styles = StyleSheet.create({
     gap: resizeHeight(30),
   },
   dateText: {
+    alignSelf: 'center',
+  },
+  errorText: {
     alignSelf: 'center',
   },
   icon: {

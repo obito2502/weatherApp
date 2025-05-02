@@ -1,12 +1,11 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { makeAutoObservable } from 'mobx';
-import WeatherService from '../../src/network/services/WeatherService';
-import { WeatherDataType } from '../../src/types/MainTypes';
+import { WeatherDataType } from '../../types/MainTypes';
+import WeatherService from '../../network/services/WeatherService';
 
 class WeatherStore {
   public loader: boolean = false;
 
-  public ha: string = '';
+  public errorMessage: string = '';
 
   constructor() {
     makeAutoObservable(this);
@@ -18,19 +17,19 @@ class WeatherStore {
     this.setLoader(true);
     try {
       weatherData = await WeatherService.getWeatherByCoord(lat, lng);
-    } catch (err: any) {
-      this.setHa(err);
+    } catch {
+      this.setError('Something went wrong');
     }
     this.setLoader(false);
     return weatherData;
   };
 
-  setHa(item: string) {
-    this.ha = item;
-  }
-
   setLoader(item: boolean) {
     this.loader = item;
+  }
+
+  setError(item: string) {
+    this.errorMessage = item;
   }
 }
 
