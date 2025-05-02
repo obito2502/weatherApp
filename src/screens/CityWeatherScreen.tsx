@@ -16,9 +16,12 @@ import Loader from '../components/Loader';
 import { WeatherDataType } from '../types/MainTypes';
 import getImageUrl from '../utils/getImageUrl';
 import useRootStore from '../store/useRootStore';
+import { useTheme } from '../themeProvider/useTheme';
 
 const CityWeatherScreen = ({ route, navigation }: CityWeatherScreenProps) => {
   const { city } = route.params;
+
+  const { styles } = useTheme(givenStyle);
   const { weatherStore } = useRootStore();
 
   const [weatherData, setWeatherData] = useState<WeatherDataType | null>(null);
@@ -44,7 +47,7 @@ const CityWeatherScreen = ({ route, navigation }: CityWeatherScreenProps) => {
     return (
       <SafeAreaView style={styles.container}>
         <Header cityName={city.city} goBack={() => navigation.goBack()} />
-        <Text color={Colors.red} size={26} style={styles.errorText}>
+        <Text color={Colors.common.red} size={26} style={styles.errorText}>
           {weatherStore.errorMessage}
         </Text>
       </SafeAreaView>
@@ -66,15 +69,15 @@ const CityWeatherScreen = ({ route, navigation }: CityWeatherScreenProps) => {
       </Text>
       <View style={styles.additionalInfoView}>
         <View style={styles.additionalInfo}>
-          <Feather name="wind" color={Colors.green} size={resizeFont(24)} />
-          <Text weight="500" color={Colors.green} size={20}>
+          <Feather name="wind" color={Colors.common.green} size={resizeFont(24)} />
+          <Text weight="500" color={Colors.common.green} size={20}>
             {weatherData?.wind.speed.toFixed(2)} m/s
           </Text>
         </View>
 
         <View style={styles.additionalInfo}>
-          <SimpleLineIcons name="drop" color={Colors.green} size={resizeFont(24)} />
-          <Text weight="500" color={Colors.green} size={20}>
+          <SimpleLineIcons name="drop" color={Colors.common.green} size={resizeFont(24)} />
+          <Text weight="500" color={Colors.common.green} size={20}>
             {weatherData?.main.humidity.toFixed(0)} %
           </Text>
         </View>
@@ -85,43 +88,45 @@ const CityWeatherScreen = ({ route, navigation }: CityWeatherScreenProps) => {
 
 export default observer(CityWeatherScreen);
 
-const styles = StyleSheet.create({
-  additionalInfo: {
-    alignItems: 'center',
-    flexDirection: 'row',
-  },
-  additionalInfoView: {
-    alignItems: 'center',
-    alignSelf: 'center',
-    borderColor: Colors.green,
-    borderRadius: resizeWidth(6),
-    borderWidth: resizeWidth(1),
-    flexDirection: 'row',
-    justifyContent: 'space-evenly',
-    paddingVertical: resizeHeight(12),
-    width: screenWidth * 0.9,
-  },
-  container: {
-    backgroundColor: Colors.white,
-    flex: 1,
-    gap: resizeHeight(30),
-  },
-  dateText: {
-    alignSelf: 'center',
-  },
-  errorText: {
-    alignSelf: 'center',
-  },
-  icon: {
-    aspectRatio: 180 / 150,
-    height: 'auto',
-    width: screenWidth * 0.48,
-  },
-  iconTempView: {
-    alignItems: 'center',
-    flexDirection: 'row',
-  },
-  tempText: {
-    alignSelf: 'center',
-  },
-});
+const givenStyle = (theme: 'dark' | 'light') => {
+  return StyleSheet.create({
+    additionalInfo: {
+      alignItems: 'center',
+      flexDirection: 'row',
+    },
+    additionalInfoView: {
+      alignItems: 'center',
+      alignSelf: 'center',
+      borderColor: Colors.common.green,
+      borderRadius: resizeWidth(6),
+      borderWidth: resizeWidth(1),
+      flexDirection: 'row',
+      justifyContent: 'space-evenly',
+      paddingVertical: resizeHeight(12),
+      width: screenWidth * 0.9,
+    },
+    container: {
+      backgroundColor: Colors[theme].background,
+      flex: 1,
+      gap: resizeHeight(30),
+    },
+    dateText: {
+      alignSelf: 'center',
+    },
+    errorText: {
+      alignSelf: 'center',
+    },
+    icon: {
+      aspectRatio: 180 / 150,
+      height: 'auto',
+      width: screenWidth * 0.48,
+    },
+    iconTempView: {
+      alignItems: 'center',
+      flexDirection: 'row',
+    },
+    tempText: {
+      alignSelf: 'center',
+    },
+  });
+};

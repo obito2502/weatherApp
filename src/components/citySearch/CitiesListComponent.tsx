@@ -7,6 +7,7 @@ import { resizeHeight } from '../../utils/resizeHelper';
 import { CityDataType } from '../../types/MainTypes';
 import useRootStore from '../../store/useRootStore';
 import NoCityComponent from './NoCityComponent';
+import { useTheme } from '../../themeProvider/useTheme';
 
 interface CitiesListComponentProps {
   navigateToCity: (city: CityDataType) => void;
@@ -14,6 +15,7 @@ interface CitiesListComponentProps {
 
 const CitiesListComponent: FC<CitiesListComponentProps> = ({ navigateToCity }) => {
   const { citiesStore } = useRootStore();
+  const { theme } = useTheme();
 
   return (
     <View style={styles.container}>
@@ -24,6 +26,7 @@ const CitiesListComponent: FC<CitiesListComponentProps> = ({ navigateToCity }) =
         )}
         estimatedItemSize={resizeHeight(60)}
         ListEmptyComponent={<NoCityComponent />}
+        extraData={theme}
       />
     </View>
   );

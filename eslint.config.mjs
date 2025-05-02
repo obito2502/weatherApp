@@ -97,6 +97,7 @@ export default [
       '@typescript-eslint/explicit-module-boundary-types': 'off',
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
       'react/require-default-props': 'off',
+      'react-native/no-unused-styles': 'off',
       'import/no-extraneous-dependencies': [
         'off',
         {

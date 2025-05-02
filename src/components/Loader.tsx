@@ -3,7 +3,7 @@ import React from 'react';
 import Colors from '../styles/Colors';
 
 const Loader = () => {
-  return <ActivityIndicator size="large" color={Colors.green} style={styles.loader} />;
+  return <ActivityIndicator size="large" color={Colors.common.green} style={styles.loader} />;
 };
 
 export default Loader;

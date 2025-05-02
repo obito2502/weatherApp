@@ -6,20 +6,23 @@ import Colors from '../../styles/Colors';
 import { resizeHeight, resizeWidth } from '../../utils/resizeHelper';
 import resizeFont from '../../utils/resizeFont';
 import Fonts from '../../styles/Fonts';
+import { useTheme } from '../../themeProvider/useTheme';
 
 interface CitySearchProps {
   onChangeText: (val: string) => void;
 }
 
 const CitySearch: FC<CitySearchProps> = ({ onChangeText }) => {
+  const { styles } = useTheme(givenStyle);
+
   return (
     <View style={styles.container}>
-      <Text color={Colors.text}>Search City</Text>
+      <Text>Search City</Text>
       <View style={styles.inputView}>
-        <Octicons name="search" size={resizeWidth(24)} color={Colors.green} />
+        <Octicons name="search" size={resizeWidth(24)} color={Colors.common.green} />
         <TextInput
           placeholder="Search"
-          placeholderTextColor={Colors.placeholder}
+          placeholderTextColor={Colors.common.placeholder}
           style={styles.input}
           onChangeText={onChangeText}
         />
@@ -30,23 +33,24 @@ const CitySearch: FC<CitySearchProps> = ({ onChangeText }) => {
 
 export default CitySearch;
 
-const styles = StyleSheet.create({
-  container: {
-    gap: resizeHeight(5),
-  },
-  input: {
-    color: Colors.text,
-    fontFamily: Fonts.roboto.regular,
-    fontSize: resizeFont(16),
-    width: '80%',
-  },
-  inputView: {
-    alignItems: 'center',
-    borderColor: Colors.green,
-    borderRadius: resizeWidth(6),
-    borderWidth: resizeWidth(1),
-    flexDirection: 'row',
-    gap: resizeWidth(8),
-    padding: resizeWidth(12),
-  },
-});
+const givenStyle = (theme: 'dark' | 'light') =>
+  StyleSheet.create({
+    container: {
+      gap: resizeHeight(5),
+    },
+    input: {
+      color: Colors[theme].text,
+      fontFamily: Fonts.roboto.regular,
+      fontSize: resizeFont(16),
+      width: '80%',
+    },
+    inputView: {
+      alignItems: 'center',
+      borderColor: Colors.common.green,
+      borderRadius: resizeWidth(6),
+      borderWidth: resizeWidth(1),
+      flexDirection: 'row',
+      gap: resizeWidth(8),
+      padding: resizeWidth(12),
+    },
+  });

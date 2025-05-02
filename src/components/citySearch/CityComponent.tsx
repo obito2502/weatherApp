@@ -13,9 +13,7 @@ interface CityComponentProps extends TouchableOpacityProps {
 const CityComponent: FC<CityComponentProps> = ({ city, navigateTo }) => {
   return (
     <TouchableOpacity style={styles.container} onPress={navigateTo}>
-      <Text color={Colors.text} size={20}>
-        {city.city}
-      </Text>
+      <Text size={20}>{city.city}</Text>
     </TouchableOpacity>
   );
 };
@@ -24,7 +22,7 @@ export default CityComponent;
 
 const styles = StyleSheet.create({
   container: {
-    borderBottomColor: Colors.green,
+    borderBottomColor: Colors.common.green,
     borderBottomWidth: resizeWidth(1),
     paddingVertical: resizeHeight(10),
   },

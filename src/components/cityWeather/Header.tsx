@@ -6,6 +6,7 @@ import { resizeHeight, resizeWidth } from '../../utils/resizeHelper';
 import { screenWidth } from '../../utils/getScreenSize';
 import resizeFont from '../../utils/resizeFont';
 import Text from '../Text';
+import { useTheme } from '../../themeProvider/useTheme';
 
 interface HeaderProps {
   cityName: string;
@@ -13,10 +14,12 @@ interface HeaderProps {
 }
 
 const Header: FC<HeaderProps> = ({ cityName, goBack }) => {
+  const { theme } = useTheme();
+
   return (
     <View style={styles.header}>
       <TouchableOpacity onPress={goBack}>
-        <AntDesign name="left" color={Colors.text} size={resizeFont(24)} />
+        <AntDesign name="left" color={Colors[theme].text} size={resizeFont(24)} />
       </TouchableOpacity>
 
       <Text size={20}>{cityName}</Text>
@@ -30,7 +33,7 @@ const styles = StyleSheet.create({
   header: {
     alignItems: 'center',
     alignSelf: 'center',
-    borderBottomColor: Colors.green,
+    borderBottomColor: Colors.common.green,
     borderBottomWidth: resizeWidth(1),
     flexDirection: 'row',
     gap: resizeWidth(20),

@@ -13,7 +13,7 @@ const GradientButton: FC<GradientButtonProps> = ({ text, ...restProps }) => {
   return (
     <TouchableOpacity style={styles.container} onPress={restProps.onPress}>
       <LinearGradient
-        colors={[Colors.lightBlue, Colors.lightGreen]}
+        colors={[Colors.common.lightBlue, Colors.common.lightGreen]}
         start={{ x: 0, y: 0 }}
         end={{ x: 0, y: 1 }}
         style={styles.container}

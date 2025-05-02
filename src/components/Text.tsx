@@ -3,6 +3,7 @@ import React, { FC } from 'react';
 import Fonts from '../styles/Fonts';
 import resizeFont from '../utils/resizeFont';
 import Colors from '../styles/Colors';
+import { useTheme } from '../themeProvider/useTheme';
 
 interface TextProps extends RNTextProps {
   children: string | string[];
@@ -12,13 +13,9 @@ interface TextProps extends RNTextProps {
   color?: string;
 }
 
-const Text: FC<TextProps> = ({
-  children,
-  weight = '400',
-  size = 16,
-  style,
-  color = Colors.text,
-}) => {
+const Text: FC<TextProps> = ({ children, weight = '400', size = 16, style, color }) => {
+  const { theme } = useTheme();
+
   const handleFontWeight = () => {
     switch (weight) {
       case '400':
@@ -34,8 +31,21 @@ const Text: FC<TextProps> = ({
     }
   };
 
+  const handleTextColor = () => {
+    if (color) {
+      return color;
+    }
+
+    return Colors[theme].text;
+  };
+
   return (
-    <RNText style={[{ fontFamily: handleFontWeight(), fontSize: resizeFont(size), color }, style]}>
+    <RNText
+      style={[
+        { fontFamily: handleFontWeight(), fontSize: resizeFont(size), color: handleTextColor() },
+        style,
+      ]}
+    >
       {children}
     </RNText>
   );
